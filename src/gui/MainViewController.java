@@ -15,6 +15,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
+import model.services.DepartmentService;
 
 public class MainViewController implements Initializable{
 
@@ -32,7 +33,7 @@ public class MainViewController implements Initializable{
 	
 	@FXML
 	public void onMenuItemDepartmentAction() {
-		loadView("/gui/DepartmentList.fxml");
+		loadView2("/gui/DepartmentList.fxml");
 	}
 	
 	@FXML
@@ -72,6 +73,37 @@ public class MainViewController implements Initializable{
 			mainVBox.getChildren().add(mainMenu);
 			// Adiciona uma coleção com os filhos do newVbox na mainVbox
 			mainVBox.getChildren().addAll(newVBox.getChildren());
+			
+		} catch (IOException e) {
+			Alerts.showAlert("IO Exception", "Error loading view", e.getMessage(), AlertType.ERROR);
+		}
+	}
+	
+	private synchronized void loadView2(String absoluteName) {
+		FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
+		try {
+			VBox newVBox = loader.load();
+			
+			// Carrega a cena principal
+			Scene mainScene = Main.getMainScene();
+			
+			
+			// Converte e recebe o primeiro elemento da view para ScrollPane, 
+			// acessa o conteúdo, e converte tudo para um objeto VBox
+			VBox mainVBox = (VBox) ((ScrollPane) mainScene.getRoot()).getContent();
+			
+			// Recebe o primeiro elemento da VBox principal
+			Node mainMenu = mainVBox.getChildren().get(0);
+			// Limpa todos os filhos do mainVbox
+			mainVBox.getChildren().clear();
+			// Adiciona o mainMenu ao mainVBox
+			mainVBox.getChildren().add(mainMenu);
+			// Adiciona uma coleção com os filhos do newVbox na mainVbox
+			mainVBox.getChildren().addAll(newVBox.getChildren());
+			
+			DepartmentListController controller = loader.getController();
+			controller.setDepartmentService(new DepartmentService());
+			controller.updateTableView();
 			
 		} catch (IOException e) {
 			Alerts.showAlert("IO Exception", "Error loading view", e.getMessage(), AlertType.ERROR);
