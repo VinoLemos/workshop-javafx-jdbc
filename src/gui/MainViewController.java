@@ -32,7 +32,7 @@ public class MainViewController implements Initializable{
 	
 	@FXML
 	public void onMenuItemDepartmentAction() {
-		System.out.println("onMenuItemDepartmentAction");
+		loadView("/gui/DepartmentList.fxml");
 	}
 	
 	@FXML
@@ -41,24 +41,36 @@ public class MainViewController implements Initializable{
 	}
 	
 	
+	
+	
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 		
 	}
 	
+	
+	// Insere os filhos da janela About na janela principal, mostrando o conteúdo da janela About na 
+	// janela principal
 	private synchronized void loadView(String absoluteName) {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
 		try {
 			VBox newVBox = loader.load();
 			
+			// Carrega a cena principal
 			Scene mainScene = Main.getMainScene();
+			
+			
 			// Converte e recebe o primeiro elemento da view para ScrollPane, 
 			// acessa o conteúdo, e converte tudo para um objeto VBox
 			VBox mainVBox = (VBox) ((ScrollPane) mainScene.getRoot()).getContent();
 			
+			// Recebe o primeiro elemento da VBox principal
 			Node mainMenu = mainVBox.getChildren().get(0);
+			// Limpa todos os filhos do mainVbox
 			mainVBox.getChildren().clear();
+			// Adiciona o mainMenu ao mainVBox
 			mainVBox.getChildren().add(mainMenu);
+			// Adiciona uma coleção com os filhos do newVbox na mainVbox
 			mainVBox.getChildren().addAll(newVBox.getChildren());
 			
 		} catch (IOException e) {
