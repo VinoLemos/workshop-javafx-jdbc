@@ -10,4 +10,15 @@ public class Utils {
 	public static Stage currentStage(ActionEvent event) {
 		return (Stage) ((Node) event.getSource()).getScene().getWindow();
 	}
+	
+	// Converte o conteúdo da TextField para um valor inteiro
+	public static Integer tryParseToInt(String str) {
+		try {
+		return Integer.parseInt(str);
+		}
+		// Retorna nulo caso seja digitado um valor inválido
+		catch (NumberFormatException e) {
+			return null;
+		}
+	}
 }
