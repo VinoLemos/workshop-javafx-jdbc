@@ -1,9 +1,12 @@
 package gui;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import db.DbException;
+import gui.listeners.DataChangeListener;
 import gui.util.Alerts;
 import gui.util.Constraints;
 import gui.util.Utils;
@@ -22,12 +25,17 @@ public class DepartmentFormController implements Initializable {
 	// Dependência de Department e DepartmentService
 	private Department entity;
 	private DepartmentService service;
+	private List<DataChangeListener> dataChangeListeners = new ArrayList<>();
 
 	public void setDepartment(Department entity) {
 		this.entity = entity;
 	}
 	public void setDepartmentService(DepartmentService service) {
 		this.service = service;
+	}
+	
+	public void subscribeDataChangeListener(DataChangeListener listener) {
+		dataChangeListeners.add(listener);
 	}
 
 // Botões, Labels e TextFields
@@ -54,6 +62,7 @@ public class DepartmentFormController implements Initializable {
 		try {
 		entity = getFormData();
 		service.saveOrUpdate(entity);
+		notifyDataChangeListeners();
 		Utils.currentStage(event).close();
 		}
 		catch (DbException e ) {
@@ -61,6 +70,11 @@ public class DepartmentFormController implements Initializable {
 		}
 	}
 
+	private void notifyDataChangeListeners() {
+		for (DataChangeListener listener : dataChangeListeners) {
+			listener.onDataChanged();
+		}
+}
 	// Insere os dados do DepartmentForm no objeto
 	private Department getFormData() {
 		Department obj = new Department();
@@ -75,13 +89,10 @@ public class DepartmentFormController implements Initializable {
 
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
-		// TextField receberá apenas valores Integer
 		Constraints.setTextFieldInteger(txtId);
-		// TextField terá limite de 30 caracteres
 		Constraints.setTextFieldMaxLenght(txtName, 30);
 	}
 
-	// Método responsável por popular os textFields com os dados do departamento
 	public void updateFormData() {
 		if (entity == null) {
 			throw new IllegalStateException("Entity was null");
