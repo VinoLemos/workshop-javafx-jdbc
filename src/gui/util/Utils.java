@@ -16,7 +16,6 @@ public class Utils {
 		try {
 		return Integer.parseInt(str);
 		}
-		// Retorna nulo caso seja digitado um valor inválido
 		catch (NumberFormatException e) {
 			return null;
 		}

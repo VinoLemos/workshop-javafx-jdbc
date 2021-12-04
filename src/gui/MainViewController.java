@@ -63,24 +63,20 @@ public class MainViewController implements Initializable{
 		try {
 			VBox newVBox = loader.load();
 			
-			// Carrega a cena principal
 			Scene mainScene = Main.getMainScene();
-			
-			
-			// Converte e recebe o primeiro elemento da view para ScrollPane, 
-			// acessa o conteúdo, e converte tudo para um objeto VBox
+
 			VBox mainVBox = (VBox) ((ScrollPane) mainScene.getRoot()).getContent();
 			
-			// Recebe o primeiro elemento da VBox principal
+
 			Node mainMenu = mainVBox.getChildren().get(0);
-			// Limpa todos os filhos do mainVbox
+
 			mainVBox.getChildren().clear();
-			// Adiciona o mainMenu ao mainVBox
+
 			mainVBox.getChildren().add(mainMenu);
-			// Adiciona uma coleção com os filhos do newVbox na mainVbox
+
 			mainVBox.getChildren().addAll(newVBox.getChildren());
 			
-			// Retorna um controlador de tipo genérico
+
 			T controller = loader.getController();
 			initializingAction.accept(controller);
 			
